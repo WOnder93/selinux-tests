@@ -57,7 +57,7 @@ rlJournalStart
         if rlIsRHEL ; then
             rlRun "ausearch -m MAC_POLICY_LOAD -i -ts ${START_DATE_TIME} | grep load_policy"
         fi
-        if rhIsRHEL 5 6 7 ; then
+        if rlIsRHEL 5 6 7 ; then
             rlRun "ausearch -m MAC_POLICY_LOAD -i -ts ${START_DATE_TIME} | grep 'policy loaded'"
         else
             # we assume that audit message has a different format now (does not contain "policy loaded")
@@ -73,7 +73,7 @@ rlJournalStart
         if rlIsRHEL ; then
             rlRun "ausearch -m MAC_POLICY_LOAD -i -ts ${START_DATE_TIME} | grep load_policy"
         fi
-        if rhIsRHEL 5 6 7 ; then
+        if rlIsRHEL 5 6 7 ; then
             rlRun "ausearch -m MAC_POLICY_LOAD -i -ts ${START_DATE_TIME} | grep 'policy loaded'"
         else
             # we assume that audit message has a different format now (does not contain "policy loaded")
