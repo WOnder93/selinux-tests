@@ -73,7 +73,7 @@ rlJournalStart
         rlPhaseEnd
 
         rlPhaseStartTest
-            rlRun -s "semanage permissive -d" 1
+            rlRun -s "semanage permissive -d" 1,2
             rlAssertNotGrep 'traceback' $rlRun_LOG -iEq
             rlAssertGrep 'error: the following argument is required: type' $rlRun_LOG -iEq
             rm -f $rlRun_LOG
