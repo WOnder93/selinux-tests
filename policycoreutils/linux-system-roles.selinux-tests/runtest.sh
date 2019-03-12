@@ -40,16 +40,19 @@ rlJournalStart
 
     rlPhaseStartTest
         rlRun "git clone https://github.com/linux-system-roles/selinux.git"
-	rlRun "cd selinux/tests"
+        rlRun "cd selinux/tests"
 
-	for ansible_test in tests_*.yml; do
+        for ansible_test in tests_*.yml; do
+            if [ $ansible_test = "tests_all_transitions.yml" ]; then
+                continue
+            fi
             rlRun "ansible-playbook -i localhost, -c local -v $ansible_test"
-	done
+        done
 
     rlPhaseEnd
 
     rlPhaseStartCleanup
-	rlRun "cd ../../"
+        rlRun "cd ../../"
         rlRun "rm -rf selinux"
     rlPhaseEnd
 rlJournalPrintText
