@@ -40,9 +40,9 @@ rlJournalStart
 
     rlPhaseStartTest
         rlRun "git clone https://github.com/linux-system-roles/selinux.git"
-	rlRun "cd selinux/test"
+	rlRun "cd selinux/tests"
 
-	for ansible_test in test_*.yml; do
+	for ansible_test in tests_*.yml; do
             rlRun "ansible-playbook -i localhost, -c local -v $ansible_test"
 	done
 
