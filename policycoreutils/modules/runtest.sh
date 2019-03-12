@@ -47,14 +47,14 @@ module test_module 1.0;
 
 require {
     type unconfined_t;
-    type fs_t;
+    attribute filesystem_type;
     class file { getattr ioctl lock open read relabelto write };
     class filesystem { associate };
 }
 
 type test_t;
 
-allow test_t fs_t:filesystem { associate };
+allow test_t filesystem_type:filesystem { associate };
 allow unconfined_t test_t:file { getattr ioctl lock open read relabelto};
 dontaudit unconfined_t test_t:file { write };
 EOF"
@@ -84,7 +84,7 @@ EOF"
         # create new type, allow reading, do not allow writing
         rlRun "cat << EOF >test_module.cil
 (type test_t)
-(allow test_t fs_t (filesystem (associate)))
+(allow test_t filesystem_type (filesystem (associate)))
 (allow unconfined_t test_t (file (getattr ioctl lock open read relabelto)))
 (dontaudit unconfined_t test_t (file (write)))
 EOF"
@@ -112,7 +112,7 @@ EOF"
         # create new type, allow reading and writing
         rlRun "cat << EOF >test_module.cil
 (type test_t)
-(allow test_t fs_t (filesystem (associate)))
+(allow test_t filesystem_type (filesystem (associate)))
 (allow unconfined_t test_t (file (getattr ioctl lock open read relabelto
     write)))
 EOF"
@@ -129,7 +129,7 @@ EOF"
         # create new type, allow only reading
         rlRun "cat << EOF >test_module.cil
 (type test_t)
-(allow test_t fs_t (filesystem (associate)))
+(allow test_t filesystem_type (filesystem (associate)))
 (allow unconfined_t test_t (file (getattr ioctl lock open read relabelto)))
 (dontaudit unconfined_t test_t (file (write)))
 EOF"
@@ -156,7 +156,7 @@ EOF"
         # create new type, allow reading
         rlRun "cat << EOF >test_module.cil
 (type test_t)
-(allow test_t fs_t (filesystem (associate)))
+(allow test_t filesystem_type (filesystem (associate)))
 (allow unconfined_t test_t (file (getattr ioctl lock open read relabelto)))
 (dontaudit unconfined_t test_t (file (write)))
 EOF"
