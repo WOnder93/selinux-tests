@@ -82,11 +82,8 @@ rlJournalStart
         rlRun "semanage port -a -p tcp -t $PORT_TYPE 5005"
         sleep 2
 
-        # Check for user_avc
-        rlRun "ausearch -m user_avc -ts ${START_DATE_TIME} > ${OUTPUT_FILE}" 0,1
-        LINE_COUNT=`wc -l < ${OUTPUT_FILE}`
-        rlRun "cat ${OUTPUT_FILE}"
-        rlAssert0 "number of lines in ${OUTPUT_FILE} should be 0" ${LINE_COUNT}
+        # Check for MAC_POLICY_LOAD
+        rlRun "ausearch -m MAC_POLICY_LOAD -ts ${START_DATE_TIME}" 0
 
         # deleting a port number from a type
         START_DATE_TIME=`date "+%m/%d/%Y %T"`
@@ -94,11 +91,8 @@ rlJournalStart
         rlRun "semanage port -d -p tcp -t $PORT_TYPE 5005"
         sleep 2
 
-        # Check for user_avc
-        rlRun "ausearch -m user_avc -ts ${START_DATE_TIME} > ${OUTPUT_FILE}" 0,1
-        LINE_COUNT=`wc -l < ${OUTPUT_FILE}`
-        rlRun "cat ${OUTPUT_FILE}"
-        rlAssert0 "number of lines in ${OUTPUT_FILE} should be 0" ${LINE_COUNT}
+        # Check for MAC_POLICY_LOAD
+        rlRun "ausearch -m MAC_POLICY_LOAD -ts ${START_DATE_TIME}" 0
     rlPhaseEnd
     fi
 
