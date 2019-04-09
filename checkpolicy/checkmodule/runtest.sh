@@ -38,13 +38,14 @@ rlJournalStart
         TEST_FILE=`mktemp`
         TEST_DIR=`mktemp -d`
         rlRun "rpm -ql ${PACKAGE} | grep bin/checkmodule"
+        rlRun "rpm -ql ${PACKAGE} | grep /usr/share/man/.*checkmodule"
     rlPhaseEnd
 
     rlPhaseStartTest
         rlRun "checkmodule >& ${TEST_FILE}" 1
-        rlAssertGrep "loading policy configuration from policy.conf" ${TEST_FILE}
+        rlAssertGrep "unable to open policy.conf" ${TEST_FILE}
         rlRun "checkmodule -b >& ${TEST_FILE}" 1
-        rlAssertGrep "loading policy configuration from policy" ${TEST_FILE}
+        rlAssertGrep "Can't open 'policy':  No such file or directory" ${TEST_FILE}
         rlRun "checkmodule -V"
         rlRun "checkmodule -U 1>/dev/null" 1
         rlRun "rm -f policy.conf"
@@ -65,8 +66,11 @@ rlJournalStart
         rlRun "checkmodule ${TEST_FILE}" 1
         rlRun "checkmodule -b ${TEST_FILE}" 1
         if rlIsRHEL 5 ; then
+            rlRun "man checkmodule | col -b | grep -- -d"
             rlRun "checkmodule --help 2>&1 | grep -- -d"
         fi
+        rlRun "man checkmodule | col -b | grep -- -h"
+        rlRun "man checkmodule | col -b | grep -- -U"
         rlRun "checkmodule --help 2>&1 | grep -- -h"
         rlRun "checkmodule --help 2>&1 | grep -- -U"
     rlPhaseEnd
@@ -82,14 +86,12 @@ rlJournalStart
         INPUT_FILE="mypolicy.te"
         OUTPUT_FILE="mypolicy.output"
         rlRun "ls -l ${INPUT_FILE}"
-        rlRun "checkmodule -m -o ${OUTPUT_FILE} ${INPUT_FILE} 2>&1 | grep \"checkmodule.*loading policy configuration from ${INPUT_FILE}\""
-        rlRun "checkmodule -m -o ${OUTPUT_FILE} ${INPUT_FILE} 2>&1 | grep \"checkmodule.*writing binary representation.*to ${OUTPUT_FILE}\""
-        rlRun "ls -l ${OUTPUT_FILE}"
+        rlRun "checkmodule -m -o ${OUTPUT_FILE} ${INPUT_FILE}" 0
+        rlRun "ls -l ${OUTPUT_FILE}" 0
         if checkmodule --help | grep -q " CIL " ; then
             rlRun "rm -f ${OUTPUT_FILE}"
-            rlRun "checkmodule -m -C -o ${OUTPUT_FILE} ${INPUT_FILE} 2>&1 | grep \"checkmodule.*loading policy configuration from ${INPUT_FILE}\""
-            rlRun "checkmodule -m -C -o ${OUTPUT_FILE} ${INPUT_FILE} 2>&1 | grep \"checkmodule.*writing CIL to ${OUTPUT_FILE}\""
-            rlRun "ls -l ${OUTPUT_FILE}"
+            rlRun "checkmodule -m -C -o ${OUTPUT_FILE} ${INPUT_FILE}" 0
+            rlRun "ls -l ${OUTPUT_FILE}" 0
         fi
     rlPhaseEnd
 
