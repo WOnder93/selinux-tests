@@ -43,6 +43,7 @@ rlJournalStart
         TEST_DIR=`mktemp -d`
         OUTPUT_FILE=`mktemp`
         rlAssertExists "/usr/bin/checkpolicy"
+        rlAssertExists "/usr/share/man/man8/checkpolicy.8.gz"
     rlPhaseEnd
 
     rlPhaseStartTest "compilation from policy.conf"
@@ -68,9 +69,9 @@ rlJournalStart
 
     rlPhaseStartTest
         rlRun "checkpolicy >& ${TEST_FILE}" 1
-        rlAssertGrep "loading policy configuration from policy.conf" ${TEST_FILE}
+        rlAssertGrep "unable to open policy.conf" ${TEST_FILE}
         rlRun "checkpolicy -b >& ${TEST_FILE}" 1
-        rlAssertGrep "loading policy configuration from policy" ${TEST_FILE}
+        rlAssertGrep "Can't open 'policy':  No such file or directory" ${TEST_FILE}
         rlRun "checkpolicy -V"
         rlRun "checkpolicy -U 2>&1 | grep \"option requires an argument\""
         rlRun "checkpolicy -U xyz" 1
@@ -97,6 +98,7 @@ rlJournalStart
         rlRun "checkpolicy -c 0 2>&1 | grep \"value 0 not in range\""
         rlRun "checkpolicy -t 2>&1 | grep \"option requires an argument\""
         rlRun "checkpolicy -t xyz 2>&1 | grep -i \"unknown target platform\""
+        rlRun "man checkpolicy | col -b | grep -- '-m]'" 1
         rlRun "checkpolicy --help 2>&1 | grep -- '-m]'" 1
     rlPhaseEnd
 
