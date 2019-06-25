@@ -1,0 +1,7 @@
+path: /libselinux/python-bindings
+summary: Import selinux python module, check its metadata
+description: |
+    The test compares rpm version with python module metadata version and
+    tries to use selinux python module in a simple operation
+relevancy:
+    - "distro = rhel-4, rhel-5, rhel-6: rhel-7: False"

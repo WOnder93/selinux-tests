@@ -1,0 +1,3 @@
+PURPOSE of /CoreOS/libselinux/Sanity/python-bindings
+Description: Import selinux python module, check its metadata and try basic operation
+Author: Petr Lautrbach <plautrba@redhat.com>
