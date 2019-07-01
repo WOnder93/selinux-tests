@@ -1,0 +1,6 @@
+path: /policycoreutils/fixfiles-F-B-N
+summary: Test fixfiles [-F] [-B] onboot
+description: |
+    Run fixfiles with -F and -B options and check /.autorelabel             
+relevancy:
+    - "distro = rhel-4, rhel-5, rhel-6: False"

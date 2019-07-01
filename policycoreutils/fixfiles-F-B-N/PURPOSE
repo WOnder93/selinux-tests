@@ -1,0 +1,3 @@
+PURPOSE of /CoreOS/policycoreutils/Sanity/fixfiles-F-B-N
+Description: Tests fixfiles -F | -B | -N options
+Author: Petr Lautrbach <plautrba@redhat.com>
