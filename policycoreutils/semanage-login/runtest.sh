@@ -60,6 +60,16 @@ rlJournalStart
         rlRun "userdel -rf xyz"
     rlPhaseEnd
 
+    rlPhaseStartTest "SELinux range of added login should be same as the user's range"
+        rlRun "useradd zyx"
+        rlRun "semanage login -a -s staff_u zyx"
+        loginrange=$(semanage login -l | grep zyx | awk '{print $3}')
+        userrange=$(semanage user -l | grep staff_u | awk '{print $4}')
+        rlAssertEquals "Is zyx login SELinux range same as staff_u SELinux user range" "$loginrange" "$userrange"
+        rlRun "semanage login -d -s staff_u zyx"
+        rlRun "userdel -rf zyx"
+    rlPhaseEnd
+
     rlPhaseStartCleanup
     rlPhaseEnd
 rlJournalPrintText
