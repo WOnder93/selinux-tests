@@ -36,5 +36,6 @@
 (allow userapp_t userapp_exec_t (file (map)))
 (allow userapp_t userapp_exec_t (file (entrypoint execute read)))
 (allow userapp_t kernel_t (system (module_request)))
+(allow userapp_t user_tmp_t (file (getattr open write append)))
 
 

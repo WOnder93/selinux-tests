@@ -53,7 +53,6 @@ rlJournalStart
         rlRun "semodule -i userapp.cil" 0 "Loading custom policy module"
         rlRun "chcon -t userapp_exec_t `which sctp_test`" 0 "Change file context of sctp_test"
         OUTPUT_FILE=`mktemp`
-        rlRun "chcon -t tmp_t ${OUTPUT_FILE}"
         rlRun "setenforce 1"
         rlRun "sestatus"
     rlPhaseEnd
@@ -61,16 +60,24 @@ rlJournalStart
     rlPhaseStartTest
         rlRun "semanage port -a -t ${PORT_TYPE} -p sctp ${SERVER_PORT}" 0
         rlRun "semanage port -a -t ${PORT_TYPE} -p sctp ${CLIENT_PORT}" 0
+        rlRun "semanage port -l 2>&1 > ${OUTPUT_FILE}" 0
+        rlRun "grep -E \"${PORT_TYPE}.+sctp.+${CLIENT_PORT}\" ${OUTPUT_FILE}"
+        if [ $? -ne 0 ]; then cat ${OUTPUT_FILE}; fi
+        rlRun "semanage port -l -C 2>&1 > ${OUTPUT_FILE}" 0
+        rlRun "grep -E \"${PORT_TYPE}.+sctp.+${SERVER_PORT}\" ${OUTPUT_FILE}"
+        if [ $? -ne 0 ]; then cat ${OUTPUT_FILE}; fi
         rlRun "sctp_test -H localhost -P ${SERVER_PORT} -l 2>&1 > ${OUTPUT_FILE} &" 0
         rlRun "sctp_test -H localhost -P ${CLIENT_PORT} -h localhost -p ${SERVER_PORT} -s" 0
-        rlAssertGrep "recvmsg" ${OUTPUT_FILE} -i
+        rlRun "grep 'recvmsg' ${OUTPUT_FILE} -i" 0
+        if [ $? -ne 0 ]; then cat ${OUTPUT_FILE}; fi
     rlPhaseEnd
 
     rlPhaseStartCleanup
-        rlRun "rm ${OUTPUT_FILE}"
+        rlRun "rm -f ${OUTPUT_FILE}"
         rlRun "killall sctp_test"
         rlRun "semanage port -D"
         rlRun "semodule -r userapp"
+        rlRun "restorecon -Rv `which sctp_test`"
     rlPhaseEnd
 rlJournalPrintText
 rlJournalEnd
