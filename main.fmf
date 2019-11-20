@@ -10,6 +10,9 @@ tags: [generic]
 /checkpolicy:
     component: checkpolicy
 
+/kernel:
+    component: kernel
+
 /libselinux:
     component: libselinux
 
