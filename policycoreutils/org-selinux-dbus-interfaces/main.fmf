@@ -1,0 +1,8 @@
+path: /policycoreutils/org-selinux-dbus-interfaces
+summary: Do the D-bus interfaces/methods of /org/selinux/object work as expected?
+description: |
+    Do the D-bus interfaces/methods of /org/selinux/object work as expected?
+relevancy:
+    - "distro = rhel-4, rhel-5, rhel-6, rhel-7: False"
+component: [ policycoreutils ]
+#requires: [ policycoreutils-dbus, selinux-policy-targeted]
