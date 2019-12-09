@@ -146,6 +146,7 @@ rlJournalStart
             git
             grep
             ipsec-tools
+            iptables
             keyutils-libs-devel
             libbpf-devel
             libibverbs-devel
