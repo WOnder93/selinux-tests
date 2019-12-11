@@ -47,6 +47,9 @@ DEFAULT_PATCHES="208221 207155"
 # Optional test parameter - location of testuite git.
 GIT_URL=${GIT_URL:-"git://github.com/SELinuxProject/selinux-testsuite"}
 
+# Optional test parameter - timeout for detecting lost packets
+NETWORK_TIMEOUT=${NETWORK_TIMEOUT:-4}
+
 # Optional test parameter - branch containing tests.
 if [ -z "$GIT_BRANCH" ]; then
     GIT_BRANCH="$DEFAULT_COMMIT"
@@ -289,6 +292,9 @@ rlJournalStart
                 rlRun "sed -i 's/python3\$/python2/' tests/overlay/access" 0 \
                     "Fix up Python shebang in overlay test"
             fi
+
+            rlRun "sed -i 's/tm\.tv_sec = [0-9]*;/tm.tv_sec = $NETWORK_TIMEOUT;/' ./tests/*/*.c" 0 \
+                "Tweak timeout in networking tests" # 2 secs is too little for SCTP test
 
             if kver_lt "3.10.0-349"; then
                 # c4684bbdac07 [security] selinux: Permit bounded transitions under NO_NEW_PRIVS or NOSUID
