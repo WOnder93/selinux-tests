@@ -58,6 +58,9 @@ if [ -z "$GIT_BRANCH" ]; then
     GIT_PATCHES="${GIT_PATCHES:-"$DEFAULT_PATCHES"}"
 fi
 
+# DISTRO unset needed for policy devel Makefile... (Beaker sets it to "RHEL-...")
+TS_ENV="env -u ARCH -u DISTRO LANG=C"
+
 # Check if pipefail is enabled to restore original setting.
 # See: https://unix.stackexchange.com/a/73180
 if false | true; then
@@ -199,6 +202,12 @@ rlJournalStart
             rlRun "version_le 4.10 4.10.1"
             rlRun "! version_le 4.10 4.9"
             rlRun "! version_le 4.10.0 4.10"
+        fi
+
+        if [ -d /sys/fs/selinux ]; then
+            selinuxfs=/sys/fs/selinux
+        else
+            selinuxfs=/selinux
         fi
 
         # test turns this boolean off
@@ -373,11 +382,10 @@ rlJournalStart
     rlPhaseStartTest
         if [ -d selinux-testsuite ]; then
             rlRun "pushd selinux-testsuite"
-            rlRun "env -u ARCH make" 0
+            rlRun "$TS_ENV make SELINUXFS=$selinuxfs" 0
             rlRun "cat results.log" 0
             $PIPEFAIL_ENABLE
-            # DISTRO= needed for policy devel Makefile... (Beaker sets it to "redhat")
-            rlRun "env -u ARCH -u DISTRO LANG=C unbuffer make -s test 2>&1 | tee -a results.log" 0
+            rlRun "$TS_ENV unbuffer make -s test SELINUXFS=$selinuxfs 2>&1 | tee -a results.log" 0
             $PIPEFAIL_DISABLE
             rlRun "popd"
         else
@@ -396,7 +404,7 @@ rlJournalStart
             rlRun "pushd selinux-testsuite"
             # Submit report to beaker.
             rlFileSubmit "results.log" "selinux-testsuite.results.$(uname -r).txt"
-            rlRun "make -s clean" 0-2
+            rlRun "$TS_ENV make -s clean SELINUXFS=$selinuxfs" 0-2
             rlRun "popd"
         fi
         rlRun "semodule -r test_policy" 0,1
