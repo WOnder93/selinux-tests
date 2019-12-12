@@ -396,7 +396,7 @@ rlJournalStart
             rlRun "pushd selinux-testsuite"
             # Submit report to beaker.
             rlFileSubmit "results.log" "selinux-testsuite.results.$(uname -r).txt"
-            rlRun "make clean" 0-2
+            rlRun "make -s clean" 0-2
             rlRun "popd"
         fi
         rlRun "semodule -r test_policy" 0,1
