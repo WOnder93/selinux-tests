@@ -36,13 +36,13 @@ PACKAGE="selinux-policy"
 # This should be updated as needed after verifying that the new version
 # doesn't break testing and after applying all necessary tweaks in the TC.
 # Run with GIT_BRANCH=master to run the latest upstream version.
-DEFAULT_COMMIT="b03e3453786cb20a16546d7743d31e5f26bfda3d"
+DEFAULT_COMMIT="2c0d0fc2491ebcd3b767eb74b6802f1c411aa0b7"
 # Default pull requests to merge before running the test.
 # If non-empty, then after checking out GIT_BRANCH the listed upstream pull
 # requests (by number) are merged, creating a new temporary local branch.
 DEFAULT_PULLS=""
 # Default SELinux Patchwork series to apply before running the test.
-DEFAULT_PATCHES="208221 207155"
+DEFAULT_PATCHES=""
 
 # Optional test parameter - location of testuite git.
 GIT_URL=${GIT_URL:-"git://github.com/SELinuxProject/selinux-testsuite"}
@@ -267,6 +267,19 @@ rlJournalStart
                 rlRun "sed -i 's/\(use Test::Harness;\)/\1 \$Test::Harness::verbose = TRUE;/' tests/runtests.pl" 0 \
                     "Enable verbose output"
             fi
+
+            {
+                echo "#ifndef IFF_NAPI"
+                echo "#define IFF_NAPI 0x0010"
+                echo "#endif"
+                echo "#ifndef IFF_NAPI_FRAGS"
+                echo "#define IFF_NAPI_FRAGS 0x0020"
+                echo "#endif"
+                echo "#ifndef IFF_NO_PI"
+                echo "#define IFF_NO_PI 0x1000"
+                echo "#endif"
+            } | rlRun "tee -a tests/tun_tap/tun_common.h" 0 \
+                "Harden tun_tap test against missing defs"
 
             exclude_tests=""
             for file in ./tests/nnp*/execnnp.c; do
