@@ -246,6 +246,7 @@ rlJournalStart
                     break
                 fi
             done
+            $PIPEFAIL_ENABLE
             for pwseries in $GIT_PATCHES; do
                 url="https://patchwork.kernel.org/series/$pwseries/mbox/"
                 if ! rlRun "curl $url | git am -"; then
@@ -254,6 +255,7 @@ rlJournalStart
                     break
                 fi
             done
+            $PIPEFAIL_DISABLE
             rlRun "popd"
         fi
 
