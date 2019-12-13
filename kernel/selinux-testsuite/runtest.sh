@@ -337,6 +337,12 @@ rlJournalStart
                     "Disable BPF tests on RHEL and non-x86_64 Fedora"
             fi
 
+            if ! [ -r "/lib/modules/$(uname -r)/build/Makefile" ]; then
+                # CKI mainline kernels don't ship with module build
+                # infrastructure just yet.
+                exclude_tests+=" module_load"
+            fi
+
             if [ -n "$exclude_tests" ] ; then
                 rlRun "sed -i '/^[^[:space:]]*:\(\| .*\)\$/i SUBDIRS:=\$(filter-out $exclude_tests, \$(SUBDIRS))' tests/Makefile" 0 \
                     "Exclude not applicable tests: $exclude_tests"
