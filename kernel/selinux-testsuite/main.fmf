@@ -6,4 +6,4 @@ description: |
 duration: 60m
 relevancy:
     - "distro = rhel-4: False"
-tier: 1
+tier: 2
