@@ -236,13 +236,13 @@ rlJournalStart
                 ref="refs/pull/$pull/head"
                 if ! rlRun "git fetch origin $ref:$ref" 0; then
                     rlRun "git checkout $GIT_BRANCH" 0
-                    rlWarn "PR merge failed, falling back to GIT_BRANCH"
+                    rlLogWarning "PR merge failed, falling back to GIT_BRANCH"
                     break
                 fi
                 if ! rlRun "git merge --no-edit $ref" 0; then
                     rlRun "git merge --abort" 0
                     rlRun "git checkout $GIT_BRANCH" 0
-                    rlWarn "PR merge failed, falling back to GIT_BRANCH"
+                    rlLogWarning "PR merge failed, falling back to GIT_BRANCH"
                     break
                 fi
             done
@@ -251,7 +251,7 @@ rlJournalStart
                 url="https://patchwork.kernel.org/series/$pwseries/mbox/"
                 if ! rlRun "curl $url | git am -"; then
                     rlRun "git checkout $GIT_BRANCH" 0
-                    rlWarn "Applying patch failed, falling back to GIT_BRANCH"
+                    rlLogWarning "Applying patch failed, falling back to GIT_BRANCH"
                     break
                 fi
             done
