@@ -398,6 +398,9 @@ rlJournalStart
 
             rlRun "popd"
         fi
+        rlRun "AUDIT_FILE=\"\$(mktemp)\""
+        rlRun "auditctl -w \"\$AUDIT_FILE\" -p w" 0 \
+            "Enable creation of PATH audit records"
     rlPhaseEnd
 
     rlPhaseStartTest
@@ -415,6 +418,9 @@ rlJournalStart
     rlPhaseEnd
 
     rlPhaseStartCleanup
+        rlRun "auditctl -W \"\$AUDIT_FILE\" -p w" 0 \
+            "Remove rule for creation of PATH audit records"
+        rlRun "rm -f \"\$AUDIT_FILE\""
         # rlSEBooleanRestore
         # rlSEBooleanRestore allow_domain_fd_use
         # none of above-mentioned commands is able to correctly restore the value in the boolean
