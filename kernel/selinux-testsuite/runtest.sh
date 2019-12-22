@@ -189,7 +189,6 @@ rlJournalStart
     rlPhaseStartSetup
         rlAssertRpm ${PACKAGE}
         rlAssertRpm audit
-        rlAssertRpm kernel
         rlFileBackup /etc/selinux/semanage.conf
         # running the testsuite in /tmp causes permission denied messages
         # rlRun "TmpDir=\$(mktemp -d)" 0 "Creating tmp directory"
