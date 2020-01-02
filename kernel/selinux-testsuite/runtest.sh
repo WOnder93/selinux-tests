@@ -36,7 +36,7 @@ PACKAGE="selinux-policy"
 # This should be updated as needed after verifying that the new version
 # doesn't break testing and after applying all necessary tweaks in the TC.
 # Run with GIT_BRANCH=master to run the latest upstream version.
-DEFAULT_COMMIT="7fd02b152f9f081298c676688a382d905aafb9fc"
+DEFAULT_COMMIT="6fbe077267e19b60ff1c9006a53ba31ddd058df0"
 # Default pull requests to merge before running the test.
 # If non-empty, then after checking out GIT_BRANCH the listed upstream pull
 # requests (by number) are merged, creating a new temporary local branch.
@@ -362,6 +362,9 @@ rlJournalStart
                 rlRun "sed -i '/^[^[:space:]]*:\(\| .*\)\$/i SUBDIRS:=\$(filter-out $exclude_tests, \$(SUBDIRS))' tests/Makefile" 0 \
                     "Exclude not applicable tests: $exclude_tests"
             fi
+
+            # needed for filesystem test on RHEL-7
+            rlRun "modprobe ext4"
 
             if ! modprobe sctp 2>/dev/null; then
                 script1='s/runcon -t test_sctp_socket_t/true/g'
