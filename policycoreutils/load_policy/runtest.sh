@@ -43,6 +43,10 @@ rlJournalStart
         rlRun "ls -l `which load_policy`"
         BINARY_POLICY=`find /etc/selinux/targeted -type f -name policy.?? | sort -n | tail -n 1`
         rlRun "ls -l ${BINARY_POLICY}"
+        if ! pgrep -x auditd ; then
+            rlRun "service auditd start"
+            sleep 1
+        fi
     rlPhaseEnd
 
     rlPhaseStartTest

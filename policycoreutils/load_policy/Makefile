@@ -53,7 +53,7 @@ $(METADATA): Makefile
 	@echo "Type:            Sanity" >> $(METADATA)
 	@echo "TestTime:        5m" >> $(METADATA)
 	@echo "RunFor:          policycoreutils" >> $(METADATA)
-	@echo "Requires:        audit policycoreutils selinux-policy-targeted" >> $(METADATA)
+	@echo "Requires:        audit policycoreutils selinux-policy-targeted initscripts" >> $(METADATA)
 	@echo "Priority:        Normal" >> $(METADATA)
 	@echo "License:         GPLv2" >> $(METADATA)
 	@echo "Confidential:    no" >> $(METADATA)
