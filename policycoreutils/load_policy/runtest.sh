@@ -48,9 +48,9 @@ rlJournalStart
             sleep 1
         fi
         rlRun "AUDIT_FILE=$(mktemp)"
-	rlRun "auditctl -l | tee -a $AUDIT_FILE" 0 "Save current audit rules"
+        rlRun "auditctl -l | tee -a $AUDIT_FILE" 0 "Save current audit rules"
         rlRun "auditctl -D" 0
-	rlRun "auditctl -w $AUDIT_FILE -p w" 0 \
+        rlRun "auditctl -w $AUDIT_FILE -p w" 0 \
 	    "Enable creation of PATH audit records"
     rlPhaseEnd
 
@@ -94,7 +94,7 @@ rlJournalStart
     rlPhaseStartCleanup
         rlRun "auditctl -W $AUDIT_FILE -p w" 0 \
               "Remove rule for creation of PATH audit records"
-	rlRun "auditctl -R $AUDIT_FILE" 0 "Restore audit rules"
+        rlRun "auditctl -R $AUDIT_FILE" 0,1 "Restore audit rules"
         rlRun "rm -f \"\$AUDIT_FILE\""
     rlPhaseEnd
 rlJournalPrintText

@@ -48,6 +48,12 @@ rlJournalStart
 
         rlRun "useradd ${USER_NAME}"
         rlRun "echo ${USER_SECRET} | passwd --stdin ${USER_NAME}"
+        rlRun "AUDIT_FILE=$(mktemp)"
+        rlRun "auditctl -l | tee -a $AUDIT_FILE" 0 "Save current audit rules"
+        rlRun "auditctl -D" 0
+        rlRun "auditctl -w $AUDIT_FILE -p w" 0 \
+	    "Enable creation of PATH audit records"
+
     rlPhaseEnd
 
     rlPhaseStartTest
@@ -145,6 +151,10 @@ rlJournalStart
     rlPhaseStartCleanup
         rlRun "userdel -rf ${USER_NAME}"
         rm -f ${OUTPUT_FILE}
+        rlRun "auditctl -W $AUDIT_FILE -p w" 0 \
+              "Remove rule for creation of PATH audit records"
+        rlRun "auditctl -R $AUDIT_FILE" 0,1 "Restore audit rules"
+        rlRun "rm -f \"\$AUDIT_FILE\""
     rlPhaseEnd
 rlJournalPrintText
 rlJournalEnd
