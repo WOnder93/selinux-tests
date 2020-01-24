@@ -35,7 +35,8 @@ PACKAGE="policycoreutils"
 rlJournalStart
     rlPhaseStartSetup
         rlAssertRpm ${PACKAGE}
-        rlAssertRpm ${PACKAGE}-gui
+        # In past, org.selinux dbus interface was shipped in policycoreutils-gui
+        rlRun "rpm -q policycoreutils-dbus || rpm -q policycoreutils-gui" 0
         rlFileBackup /etc/selinux/config
         rlRun "gdbus introspect --system -d org.selinux -o /"
         rlRun "gdbus introspect --system -d org.selinux -o /org"
