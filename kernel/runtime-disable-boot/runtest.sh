@@ -39,7 +39,7 @@ if [ $REBOOTCOUNT -le 10 ]; then
     rlPhaseStartTest "Reboot #$REBOOTCOUNT"
         rlAssertNotGrep "selinux=0" /proc/cmdline
         rlRun "! selinuxenabled"
-        rlRun "dmesg | grep -q 'SELinux:  Disabled at runtime.'"
+        rlRun "dmesg -l info | grep -q 'SELinux:  Disabled at runtime.'"
         rhts-reboot
 fi
     rlPhaseEnd
